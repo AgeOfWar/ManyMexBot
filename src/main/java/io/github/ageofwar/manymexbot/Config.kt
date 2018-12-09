@@ -18,17 +18,20 @@ data class Config(
 ) {
     data class OnMessage(
             @SerializedName("trigger") @JsonAdapter(RegexTypeAdapter::class) val regex: Regex,
-            @SerializedName("user_id") val userId: Long? = null,
+            @SerializedName("whitelist") val whitelist: List<Long>? = null,
+            @SerializedName("blacklist") val blacklist: List<Long>? = null,
             @SerializedName("message") val message: Message
     )
     data class Message(
-            @SerializedName("replies", alternate = ["reply"]) val replies: List<String> = listOf(),
+            @SerializedName("text") val text: List<String> = listOf(),
             @SerializedName("files", alternate = ["file"]) val files: List<String> = listOf(),
             @SerializedName("send_as_reply") val sendAsReply: Boolean = true,
             @SerializedName("reply_markup") val replyMarkup: ReplyMarkup? = null
     )
     data class OnCallback(
             @SerializedName("callback") val callback: String,
+            @SerializedName("whitelist") val whitelist: List<Long>? = null,
+            @SerializedName("blacklist") val blacklist: List<Long>? = null,
             @SerializedName("message") val message: Message? = null,
             @SerializedName("answer") val answer: CallbackAnswer? = null
     )

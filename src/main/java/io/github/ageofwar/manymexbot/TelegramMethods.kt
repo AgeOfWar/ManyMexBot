@@ -13,8 +13,8 @@ import io.github.ageofwar.telejam.replymarkups.ReplyMarkup
 import io.github.ageofwar.telejam.text.Text
 
 fun Bot.sendMessage(replyToMessage: Message, message: Config.Message): Message? {
-    return if (message.replies.isNotEmpty() || message.files.isNotEmpty()) {
-        val reply = Text.parseHtml(if (message.replies.isNotEmpty()) message.replies.random() else null)
+    return if (message.text.isNotEmpty() || message.files.isNotEmpty()) {
+        val reply = Text.parseHtml(if (message.text.isNotEmpty()) message.text.random() else null)
         val file = if (message.files.isNotEmpty()) message.files.random() else null
         val replyMarkup = message.replyMarkup
         val sendAsReply = message.sendAsReply
