@@ -1,7 +1,7 @@
 # ManyMex
 An easy way to create [Telegram Bots].
 
-All you need is a JSON config:
+All you need is a JSON configuration file:
 ```js
 {
     "on_message": [ // Here are defined the message handlers
@@ -47,11 +47,8 @@ config file.
 
 Now run again your program and enjoy your bot!
 
-# Config Format
+# Configuration File Format
 This is how your JSON config should be configured:
-
-## Config
-The entire config.
 
 | Field       | Type                        | Optional | Description               |
 |-------------|-----------------------------|----------|---------------------------|
