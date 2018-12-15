@@ -152,13 +152,13 @@ Response to a callback.
 
 [Telegram Bots]: https://core.telegram.org/bots
 
-[Message Handler]: #Message&#32;Handler
-[Callback Handler]: #Callback&#32;Handler
+[Message Handler]: #Message-Handler
+[Callback Handler]: #Callback-Handler
 [Message]: #Message
-[Inline Keyboard]: #Inline&#32;Keyboard
-[Reply Keyboard]: #Reply&#32;Keyboard
-[Remove Reply Keyboard]: #Remove&#32;Reply&#32;Keyboard
-[Force Reply]: #Force&#32;Reply
-[Inline Keyboard Button]: #Inline&#32;Keyboard&#32;Button
-[Keyboard Button]: #Keyboard&#32;Button
-[Callback Answer]: #Callback&#32;Answer
+[Inline Keyboard]: #Inline-Keyboard
+[Reply Keyboard]: #Reply-Keyboard
+[Remove Reply Keyboard]: #Remove-Reply-Keyboard
+[Force Reply]: #Force-Reply
+[Inline Keyboard Button]: #Inline-Keyboard-Button
+[Keyboard Button]: #Keyboard-Button
+[Callback Answer]: #Callback-Answer
