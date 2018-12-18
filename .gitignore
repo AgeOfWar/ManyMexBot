@@ -2,3 +2,5 @@
 *.iml
 out/
 META-INF/
+.gradle/
+build/
