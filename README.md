@@ -42,6 +42,9 @@ All you need is a JSON configuration file:
 }
 ```
 
+Note that you have to remove comments from the example above in order to use it as a valid
+configuration file.
+
 Run the program (you can downoad it [here](https://github.com/AgeOfWar/ManyMexBot/releases/)),
 and in the generated `bot.properties` file set the bot token and the path to the config file.
 
