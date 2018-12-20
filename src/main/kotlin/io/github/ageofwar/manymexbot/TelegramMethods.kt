@@ -3,10 +3,12 @@ package io.github.ageofwar.manymexbot
 import io.github.ageofwar.telejam.Bot
 import io.github.ageofwar.telejam.callbacks.CallbackQuery
 import io.github.ageofwar.telejam.connection.UploadFile
+import io.github.ageofwar.telejam.inline.InlineQuery
 import io.github.ageofwar.telejam.messages.DocumentMessage
 import io.github.ageofwar.telejam.messages.Message
 import io.github.ageofwar.telejam.messages.TextMessage
 import io.github.ageofwar.telejam.methods.AnswerCallbackQuery
+import io.github.ageofwar.telejam.methods.AnswerInlineQuery
 import io.github.ageofwar.telejam.methods.SendDocument
 import io.github.ageofwar.telejam.methods.SendMessage
 import io.github.ageofwar.telejam.replymarkups.ReplyMarkup
@@ -26,11 +28,6 @@ fun Bot.sendMessage(replyToMessage: Message, message: Config.Message): Message? 
             }
         }
     } else null
-}
-
-fun Bot.answerCallbackQuery(callbackQuery: CallbackQuery, answer: Config.CallbackAnswer) {
-    val text = answer.text.random()
-    answerCallbackQuery(callbackQuery, text, answer.showAlert)
 }
 
 fun Bot.sendMessage(replyToMessage: Message,
@@ -67,6 +64,11 @@ fun Bot.sendDocument(replyToMessage: Message,
     return execute(sendDocument)
 }
 
+fun Bot.answerCallbackQuery(callbackQuery: CallbackQuery, answer: Config.CallbackAnswer) {
+    val text = answer.text.random()
+    answerCallbackQuery(callbackQuery, text, answer.showAlert)
+}
+
 fun Bot.answerCallbackQuery(
         callbackQuery: CallbackQuery,
         text: String? = null,
@@ -78,4 +80,19 @@ fun Bot.answerCallbackQuery(
             .cacheTime(cacheTime)
             .showAlert(showAlert)
     execute(answerCallbackQuery)
+}
+
+fun Bot.answerInlineQuery(inlineQuery: InlineQuery, config: Config.OnInlineQuery) {
+    answerInlineQuery(inlineQuery, *config.results.toTypedArray())
+}
+
+fun Bot.answerInlineQuery(
+        inlineQuery: InlineQuery,
+        vararg results: InlineQueryResult
+) {
+    val answerInlineQuery = AnswerInlineQuery().apply {
+        inlineQuery(inlineQuery)
+        results(*results)
+    }
+    execute(answerInlineQuery)
 }

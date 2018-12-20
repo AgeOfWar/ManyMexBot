@@ -4,6 +4,8 @@ import io.github.ageofwar.telejam.Bot
 import io.github.ageofwar.telejam.LongPollingBot
 import io.github.ageofwar.telejam.callbacks.CallbackDataHandler
 import io.github.ageofwar.telejam.callbacks.CallbackQuery
+import io.github.ageofwar.telejam.inline.InlineQuery
+import io.github.ageofwar.telejam.inline.InlineQueryHandler
 import io.github.ageofwar.telejam.messages.TextMessage
 import io.github.ageofwar.telejam.messages.TextMessageHandler
 
@@ -13,12 +15,16 @@ class ManyMexBot(
 ) : LongPollingBot(bot) {
     init {
         events.apply {
-            config.messages.forEach {
+            config.messages?.forEach {
                 registerTextMessageHandler(MessageHandler(bot, it))
             }
 
-            config.callbacks.forEach {
+            config.callbacks?.forEach {
                 registerCallbackDataHandler(CallbackHandler(bot, it))
+            }
+
+            config.inlineQueries?.forEach {
+                registerInlineQueryHandler(InlineHandler(bot, it))
             }
         }
     }
@@ -47,6 +53,18 @@ class CallbackHandler(private val bot: Bot, private val config: Config.OnCallbac
                     config.message?.let { bot.sendMessage(message, it) }
                     config.answer?.let { bot.answerCallbackQuery(callbackQuery, it) }
                             ?: bot.answerCallbackQuery(callbackQuery)
+                }
+            }
+        }
+    }
+}
+
+class InlineHandler(private val bot: Bot, private val config: Config.OnInlineQuery) : InlineQueryHandler {
+    override fun onInlineQuery(inlineQuery: InlineQuery) {
+        if (config.whitelist == null || inlineQuery.sender.id in config.whitelist) {
+            if (config.blacklist == null || inlineQuery.sender.id !in config.blacklist) {
+                if (config.regex.find(inlineQuery.query) != null) {
+                    bot.answerInlineQuery(inlineQuery, config)
                 }
             }
         }

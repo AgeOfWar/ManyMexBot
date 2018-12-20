@@ -12,9 +12,12 @@ import java.nio.charset.StandardCharsets.UTF_8
 import java.nio.file.Files.*
 import java.nio.file.Path
 
+typealias InlineQueryResult = io.github.ageofwar.telejam.inline.InlineQueryResult
+
 data class Config(
-        @SerializedName("on_message") val messages: List<OnMessage> = listOf(),
-        @SerializedName("on_callback") val callbacks: List<OnCallback> = listOf()
+        @SerializedName("on_message") val messages: List<OnMessage>? = null,
+        @SerializedName("on_callback") val callbacks: List<OnCallback>? = null,
+        @SerializedName("on_inline_query") val inlineQueries: List<OnInlineQuery>? = null
 ) {
     data class OnMessage(
             @SerializedName("trigger") @JsonAdapter(RegexTypeAdapter::class) val regex: Regex,
@@ -38,6 +41,12 @@ data class Config(
     data class CallbackAnswer(
             @SerializedName("text") val text: List<String> = listOf(),
             @SerializedName("show_alert") val showAlert: Boolean = false
+    )
+    data class OnInlineQuery(
+            @SerializedName("trigger") @JsonAdapter(RegexTypeAdapter::class) val regex: Regex,
+            @SerializedName("whitelist") val whitelist: List<Long>? = null,
+            @SerializedName("blacklist") val blacklist: List<Long>? = null,
+            @SerializedName("results") val results: List<InlineQueryResult>
     )
 }
 
