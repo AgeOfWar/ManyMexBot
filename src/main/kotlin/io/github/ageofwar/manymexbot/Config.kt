@@ -17,7 +17,7 @@ typealias InlineQueryResult = io.github.ageofwar.telejam.inline.InlineQueryResul
 data class Config(
         @SerializedName("on_message") val messages: List<OnMessage>? = null,
         @SerializedName("on_callback") val callbacks: List<OnCallback>? = null,
-        @SerializedName("on_inline_query") val inlineQueries: List<OnInlineQuery>? = null
+        @SerializedName("on_inline") val inlineQueries: List<OnInlineQuery>? = null
 ) {
     data class OnMessage(
             @SerializedName("trigger") @JsonAdapter(RegexTypeAdapter::class) val regex: Regex,
