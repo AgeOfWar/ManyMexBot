@@ -16,6 +16,7 @@ typealias InlineQueryResult = io.github.ageofwar.telejam.inline.InlineQueryResul
 
 data class Config(
         @SerializedName("on_message") val messages: List<OnMessage>? = null,
+        @SerializedName("welcome_message") val welcomeMessages: List<String>? = null,
         @SerializedName("on_callback") val callbacks: List<OnCallback>? = null,
         @SerializedName("on_inline") val inlineQueries: List<OnInlineQuery>? = null
 ) {
