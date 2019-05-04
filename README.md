@@ -2,7 +2,7 @@
 An easy way to create [Telegram Bots].
 
 All you need is a JSON configuration file:
-```js
+```json5
 {
     "on_message": [ // Here are defined the message handlers
         {
@@ -10,17 +10,17 @@ All you need is a JSON configuration file:
             "whitelist": [123456789],       // and is sent from the user with id '123456789'
             "message": {                    // send a message
                 "text": ["hello", "hi"],    // with the text 'hello' or 'hi'
-                "files": ["./hello.png"]    // and with an image
+                "files": "./hello.png"      // and with an image
             }
         },
         {
             "trigger": "keyboard",          // if the message contains 'keyboard'
             "blacklist": [987654321],       // and is not sent from the user with id '987654321'
             "message": {                    // send a message
-                "text": ["press a button"], // with the text 'press a button'
+                "text": "press a button",   // with the text 'press a button'
                 "reply_markup": {           // with a keyboard
                     "inline_keyboard": [    // with three buttons
-                        [{"text": "click me", "callback_data": "click"}],
+                        {"text": "click me", "callback_data": "click"},
                         [
                             {"text": "google", "url": "www.google.it"},
                             {"text": "click me too", "callback_data": "click"}
