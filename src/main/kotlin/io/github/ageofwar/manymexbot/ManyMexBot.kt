@@ -1,19 +1,20 @@
 package io.github.ageofwar.manymexbot
 
+import io.github.ageofwar.manymexbot.regex.combine
+import io.github.ageofwar.manymexbot.regex.format
+import io.github.ageofwar.manymexbot.regex.groupMap
+import io.github.ageofwar.manymexbot.regex.toGroupMap
 import io.github.ageofwar.telejam.Bot
 import io.github.ageofwar.telejam.LongPollingBot
 import io.github.ageofwar.telejam.callbacks.CallbackDataHandler
 import io.github.ageofwar.telejam.callbacks.CallbackQuery
 import io.github.ageofwar.telejam.chats.Chat
-import io.github.ageofwar.telejam.inline.InlineQuery
-import io.github.ageofwar.telejam.inline.InlineQueryHandler
 import io.github.ageofwar.telejam.messages.NewChatMemberHandler
 import io.github.ageofwar.telejam.messages.NewChatMembersMessage
 import io.github.ageofwar.telejam.messages.TextMessage
 import io.github.ageofwar.telejam.messages.TextMessageHandler
 import io.github.ageofwar.telejam.text.Text
 import io.github.ageofwar.telejam.users.User
-import java.text.MessageFormat
 
 class ManyMexBot(
         bot: Bot,
@@ -32,32 +33,35 @@ class ManyMexBot(
             config.callbacks?.forEach {
                 registerCallbackDataHandler(CallbackHandler(bot, it))
             }
-
-            config.inlineQueries?.forEach {
-                registerInlineQueryHandler(InlineHandler(bot, it))
-            }
         }
     }
+
+    override fun onError(t: Throwable) = t.printStackTrace()
 }
 
 class MessageHandler(private val bot: Bot, private val config: Config.OnMessage) : TextMessageHandler {
     override fun onTextMessage(message: TextMessage) {
-        if (config.regex.find(message.text) != null) {
+        val matcher = config.regex.toPattern().matcher(message.text)
+        if (matcher.find()) {
             if (config.whitelist == null || message.sender.id in config.whitelist) {
                 if (config.blacklist == null || message.sender.id !in config.blacklist) {
-                    bot.sendMessage(message, config.message)
+                    val mention = Text.textMention(message.sender).toHtmlString()
+                    val groupMap = combine(
+                            matcher.toGroupMap(),
+                            groupMap(namedGroups = mapOf("mention" to mention))
+                    )
+                    bot.sendMessage(message, config.message, groupMap)
                 }
             }
         }
     }
 }
 
-
 class WelcomeHandler(private val bot: Bot, private val messages: List<String>) : NewChatMemberHandler {
     override fun onNewChatMember(chat: Chat, user: User, message: NewChatMembersMessage) {
         val mention = Text.textMention(user).toHtmlString()
-        val text = MessageFormat.format(messages.random(), mention)
-        bot.sendMessage(message, Text.parseHtml(text))
+        val groupMap = groupMap(namedGroups = mapOf("mention" to mention))
+        bot.sendMessage(message, Text.parseHtml(format(messages.random(), groupMap)))
     }
 }
 
@@ -69,21 +73,11 @@ class CallbackHandler(private val bot: Bot, private val config: Config.OnCallbac
             val message = callbackQuery.message.get()
             if (config.whitelist == null || callbackQuery.sender.id in config.whitelist) {
                 if (config.blacklist == null || callbackQuery.sender.id !in config.blacklist) {
-                    config.message?.let { bot.sendMessage(message, it) }
-                    config.answer?.let { bot.answerCallbackQuery(callbackQuery, it) }
+                    val mention = Text.textMention(callbackQuery.sender).toHtmlString()
+                    val groupMap = groupMap(namedGroups = mapOf("mention" to mention))
+                    config.message?.let { bot.sendMessage(message, it, groupMap) }
+                    config.answer?.let { bot.answerCallbackQuery(callbackQuery, it, groupMap) }
                             ?: bot.answerCallbackQuery(callbackQuery)
-                }
-            }
-        }
-    }
-}
-
-class InlineHandler(private val bot: Bot, private val config: Config.OnInlineQuery) : InlineQueryHandler {
-    override fun onInlineQuery(inlineQuery: InlineQuery) {
-        if (config.whitelist == null || inlineQuery.sender.id in config.whitelist) {
-            if (config.blacklist == null || inlineQuery.sender.id !in config.blacklist) {
-                if (config.regex.find(inlineQuery.query) != null) {
-                    bot.answerInlineQuery(inlineQuery, config)
                 }
             }
         }

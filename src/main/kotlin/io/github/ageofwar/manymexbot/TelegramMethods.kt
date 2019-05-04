@@ -1,22 +1,24 @@
 package io.github.ageofwar.manymexbot
 
+import io.github.ageofwar.manymexbot.regex.GroupMap
+import io.github.ageofwar.manymexbot.regex.format
 import io.github.ageofwar.telejam.Bot
 import io.github.ageofwar.telejam.callbacks.CallbackQuery
 import io.github.ageofwar.telejam.connection.UploadFile
-import io.github.ageofwar.telejam.inline.InlineQuery
 import io.github.ageofwar.telejam.messages.DocumentMessage
 import io.github.ageofwar.telejam.messages.Message
 import io.github.ageofwar.telejam.messages.TextMessage
 import io.github.ageofwar.telejam.methods.AnswerCallbackQuery
-import io.github.ageofwar.telejam.methods.AnswerInlineQuery
 import io.github.ageofwar.telejam.methods.SendDocument
 import io.github.ageofwar.telejam.methods.SendMessage
 import io.github.ageofwar.telejam.replymarkups.ReplyMarkup
 import io.github.ageofwar.telejam.text.Text
 
-fun Bot.sendMessage(replyToMessage: Message, message: Config.Message): Message? {
+fun Bot.sendMessage(replyToMessage: Message,
+                    message: Config.Message,
+                    groupMap: GroupMap = GroupMap.empty()): Message? {
     return if (message.text.isNotEmpty() || message.files.isNotEmpty()) {
-        val reply = Text.parseHtml(if (message.text.isNotEmpty()) message.text.random() else null)
+        val reply = Text.parseHtml(if (message.text.isNotEmpty()) format(message.text.random(), groupMap) else null)
         val file = if (message.files.isNotEmpty()) message.files.random() else null
         val replyMarkup = message.replyMarkup
         val sendAsReply = message.sendAsReply
@@ -64,8 +66,10 @@ fun Bot.sendDocument(replyToMessage: Message,
     return execute(sendDocument)
 }
 
-fun Bot.answerCallbackQuery(callbackQuery: CallbackQuery, answer: Config.CallbackAnswer) {
-    val text = answer.text.random()
+fun Bot.answerCallbackQuery(callbackQuery: CallbackQuery,
+                            answer: Config.CallbackAnswer,
+                            groupMap: GroupMap = GroupMap.empty()) {
+    val text = format(answer.text.random(), groupMap)
     answerCallbackQuery(callbackQuery, text, answer.showAlert)
 }
 
@@ -80,19 +84,4 @@ fun Bot.answerCallbackQuery(
             .cacheTime(cacheTime)
             .showAlert(showAlert)
     execute(answerCallbackQuery)
-}
-
-fun Bot.answerInlineQuery(inlineQuery: InlineQuery, config: Config.OnInlineQuery) {
-    answerInlineQuery(inlineQuery, *config.results.toTypedArray())
-}
-
-fun Bot.answerInlineQuery(
-        inlineQuery: InlineQuery,
-        vararg results: InlineQueryResult
-) {
-    val answerInlineQuery = AnswerInlineQuery().apply {
-        inlineQuery(inlineQuery)
-        results(*results)
-    }
-    execute(answerInlineQuery)
 }
