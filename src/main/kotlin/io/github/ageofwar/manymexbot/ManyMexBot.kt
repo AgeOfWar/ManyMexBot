@@ -23,15 +23,15 @@ class ManyMexBot(
     init {
         events.apply {
             config.messages?.forEach {
-                registerTextMessageHandler(MessageHandler(bot, it))
+                registerUpdateHandler(MessageHandler(bot, it))
             }
 
             config.welcomeMessages?.let {
-                registerNewChatMemberHandler(WelcomeHandler(bot, it))
+                registerUpdateHandler(WelcomeHandler(bot, it))
             }
 
             config.callbacks?.forEach {
-                registerCallbackDataHandler(CallbackHandler(bot, it))
+                registerUpdateHandler(CallbackHandler(bot, it))
             }
         }
     }
