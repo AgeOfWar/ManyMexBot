@@ -20,14 +20,14 @@ buildscript {
 
 
 repositories {
+    maven { url 'https://jitpack.io' }
     mavenCentral()
-    jcenter()
 }
 
 sourceCompatibility = 1.8
 
 dependencies {
-    compile 'io.github.ageofwar:telejam:7.6'
+    compile 'com.github.AgeOfWar:Telejam:v7.11'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
 
